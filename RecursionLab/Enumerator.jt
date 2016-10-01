@@ -1,0 +1,33 @@
+// Enumerator class provides an iterator between two numbers.
+// @author Ashwin Reddy
+// @version September 5, 2015
+public class Enumerator
+{
+    private current; // keeps track of where the enumerator is
+    private upperLimit; // used as reference for when to stop
+
+    // Initializes the Enumerator class.
+    // @param lowerBound    the starting point
+    // @param upperBound    the ending point
+    private Enumerator(lowerBound, upperBound)
+    {
+        current    = lowerBound; // initialize the starting point as the lower bound
+        upperLimit = upperBound;
+    }
+
+    // Returns if the enumerator can continue.
+    // @return if the current point can be incremented
+    public hasNext()
+    {
+        return (current <= upperLimit);
+    }
+
+    // Returns the current point but also increments it.
+    // @return current point
+    public next()
+    {
+        temp    = current;
+        current = current + 1;
+        return temp;
+    }
+}

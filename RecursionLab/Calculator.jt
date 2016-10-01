@@ -1,0 +1,221 @@
+// FancyCalc class demonstrates assorted computations via recursive implementations.
+// @author Ashwin Reddy with assistance from Ms. Datar and Ryan Adolf
+// @version September 6, 2016
+public class FancyCalc
+{
+    public FancyCalc()
+    {
+
+    }
+
+    // Squares a given number and return the result.
+    // @param x    is any integer
+    // @return     x raised to the second power
+    private square(x)
+ 	{
+        return x * x;
+    }
+
+    // Computes the value of a power expression
+    // @param base          integer base of the expression
+    // @param exponent      nonzero integer power to be raised to
+    // @return              base raised to the power of the exponent
+    public pow(base, exponent)
+ 	{
+        if (exponent == 0) // base case is when the exponent is zero
+            return 1; // any number raised to the zeroth power is defined to be 1
+        else
+            return base * this.pow(base, exponent-1); // otherwise, it can be computed using the previous power multiplied by the base once more
+    }
+
+    // Computes value of a power expression (modified, faster version of pow method above).
+    // @param base          integer base of the expression
+    // @param exponent      nonzero integer power to be raised to
+    // @return              base raised to the power of the exponent
+    public fastPow(base, exponent)
+ 	{
+        if (exponent == 0)
+            return 1; // as before, base case is 1 for base to zero power
+
+        if (exponent % 2 == 0)
+            return this.square(this.fastPow(base, exponent/2)); // if we happen to be computing an even power, we can just square with half the power
+
+        return base * this.fastPow(base, exponent-1); //otherwise, we proceed as before
+    }
+
+    // Finds the greatest common divisor between two numbers.
+    // @param n1       any integer
+    // @param n2      any integer
+    // @return      largest number that can divide into both numbers
+    public gcd(n1, n2)
+ 	{
+        if (n2 == 0)
+            return n1; //base case is that if we are asked for gcd of n1 and 0, the answer is n1
+        return this.gcd(n2, n1 % n2); // otherwise, we find the gcd of the second number and the remainder of the first divided by the second
+    }
+
+    // Uses helper method to return true if num is prime and false if composite.
+    // @param num   any integer
+    // @return     if num is prime
+    public isPrime(num)
+ 	{
+        return this.helpPrime(num, 2); // use helper method to recursively go from 2 to num-1 and check divisibility
+    }
+
+    // Checks if a number is prime by checking divisibility for 2 to num-1.
+    // @param   num         an integer we are interested in testing if it is prime or not
+    // @param   divisor     a test number between 2 and num-1 for divisibility check
+    private helpPrime(num, divisor)
+ 	{
+        if (num % divisor == 0)
+            return false; // the way we set up this method, there should be no factors, so if it has one, it is composite
+        if (divisor < num - 1 && num % divisor != 0) // if this divisor was not divisible, try the next divisor
+            return this.helpPrime(num, divisor + 1);
+        return true; // if it got past all the numbers, it is prime
+    }
+
+    // Uses helper method to return the factorial of n.
+    // @param n an integer
+    // @return n!
+    public fact(n)
+ 	{
+        return this.factHelp(n, 1); // call on helper method for recursion, setting up answer as 1
+    }
+
+    // Tracks the compounded multiplication of a factorial.
+    // @param n         any integer
+    // @param result    starts as n and grows to n! over the course of the method
+    // @return n!
+    private factHelp(n, result)
+ 	{
+        if (n == 0)
+            return result; // 0! = 1
+        else
+            return this.factHelp(n - 1, result*n); // since we are returning result, we have to use this to keep track of the values while reducing the problem
+    }
+
+    // Sums the digits of an integer.
+    // @precondition n is positive, otherwise the result is simply the number given
+    // @param n any integer
+    // @return sum of digits (e.g: digitalSum(123) is 3+2+1=6)
+    public digitalSum(n)
+ 	{
+        if (n < 10)
+            return n; // the sum of a single digit is just that digit
+        else
+            return (n % 10) + this.digitalSum(n/10); // add the last digit to the sum of the rest of the numbers
+    }
+
+    // Finds the nth number in the Fibonacci sequence.
+    // @precondition n is greater than or equal to 1
+    // @param n     integer index for sequence
+    // @return     sum of previous two numbers in the sequence
+    public fib(n)
+ 	{
+        if (n == 1 || n == 2) // first two numbers are 1
+            return 1;
+        else
+            return this.fib(n-1) + this.fib(n-2); // all other terms are sums of the previous two terms
+    }
+
+    // Finds the nth number in the Fibonacci sequence more quickly than the naive recursive implementation.
+    // @precondition n is greater than or equal to 1
+    // @param n     integer index for sequence
+    // @return     sum of previous two numbers in sequence
+    public fastFib(n)
+ 	{
+        if (n == 1 || n == 2) // first two numbers are 1
+            return 1;
+        if (n == 3)
+            return 2;
+        else
+            return this.fib(n-3) + 2*this.fib(n-2); // avoids recomputing fib(n-2) by simply doubling it
+    }
+
+    // Finds the nth term of fibonacci sequence faster than above implementations.
+    // @param   n  index of sequence value
+    // @return  nth term of sequence
+    public fasterFib(n)
+    {
+        return this.fasterFibHelper(n, 1, 0); // calls the helper method with first two terms
+    }
+
+    // Tracks term number while continually adding current and prev terms.
+    // @param term      index of sequence value
+    // @param current   the latest value of the sequence
+    // @param prev      lagging term used to compute next value
+    // @return          the (term)th number in fibonacci series
+    private fasterFibHelper(term, current, prev)
+    {
+        if(term == 0) // if for some reason, the 0th term is wanted, the lagging term is given
+            return prev;
+        if(term == 1) // otherwise, if method is used normally, it will decrement to 1 and the current answer is given
+            return current;
+        return this.fasterFibHelper(term - 1, current+prev, current); // continue by decrementing counter and performing fibonnaci operations on terms
+    }
+
+    // Recurses and terminates without using "if construct".
+    // @precondition    n greater than 0
+    // @param n         counter
+    // @returns         true
+    public recursiveWithoutIf(n)
+    {
+        return n == 0 || this.recursiveWithoutIf(n-1); // using short circuit evaluation to skip recursive call at specific time
+    }
+
+    // Finds an integer approximation of the square root of a number using Newton's method.
+    // @precondition num is greater than 0
+    // @param num     number whose square root we want
+    // @return       √(num)
+    public sqrt(num)
+ 	{
+        return this.sqrtHelp(num, 1); // calls on helper method to recursively guess, starting with a guess of 1
+    }
+
+    // Estimates a square root using an average based on a guess.
+    // @param num      number whose square root we want
+    // @return        √(num)
+    private sqrtHelp(num, guess)
+ 	{
+        if(this.shouldSqrtStop(num, guess))
+            return guess; // if our guess is good, we will simply give that as the answer
+        return this.sqrtHelp(num, this.avg(guess, num/guess)); // otherwise, we try to improve the guess by using the average of our guess and num/guess
+    }
+
+    // Averages two integers.
+    // @param n1    an integer
+    // @param n2    an integer
+    // @return     half the sum of n1 and n2
+    private avg(n1, n2)
+ 	{
+        return (n1+n2)/2;
+    }
+
+    // Returns an answer to the question "should the algorithm stop?"
+    // @param num   number whose square root we want
+    // @param guess our current guess of the square root
+    // @return if algorithm should stop
+    private shouldSqrtStop(num, guess)
+ 	{
+        if (guess == num / guess || guess + 1 == num / guess) // if guess is or is close to the square root, we are done
+            return true;
+        if (this.square(guess) < num && this.square(guess+1) > num) // another true case to prevent infinite recursion loops (our guess is sufficiently correct)
+            return true;
+        return false; // otherwise we need to improve our guess
+    }
+
+    // Computes Ackermann's function for two integers, m and n.
+    // @precondition m and n are nonnegative integers
+    // @param m     integer
+    // @param n     integer
+    // @return     ack(m,n)
+    public ack(m, n)
+    {
+        if (m == 0)
+            return n+1;
+        if (m > 0 && n == 0)
+            return this.ack(m-1, 1);
+        if (m > 0 && n > 0)
+            return this.ack(m-1, this.ack(m, n-1));
+    }
+}

@@ -1,0 +1,140 @@
+// ListNode class provides functionality for LinkedLists/Nodes
+//@author Ashwin Reddy with assistance from Ashwin Rammohan
+// @version September 28 2016
+public class ListNode {
+    private value;
+    private next;
+
+    // @param initValue starting value for list node
+    // @param initNext starting pointer to next node
+    public ListNode(initValue, initNext) {
+        value = initValue;
+        next = initNext;
+    }
+
+    // @return value of node
+    public getValue() {
+        return value;
+    }
+    // @return pointer to next node
+    public getNext() {
+        return next;
+    }
+    // @newValue new value for this node
+    public setValue(newValue) {
+        value = newValue;
+    }
+    // @newNext new pointer for this node
+    public setNext(newNext) {
+        next = newNext;
+        return this;
+    }
+}
+
+public class ListUtil {
+    public ListUtil() {
+
+    }
+    // finds the number of elements in the list
+    // @param list a linkedlist
+    // @return size of list
+    public size(list) {
+        if (list == null) return 0; // the size of an empty list is 0
+        return 1 + this.size(list.getNext()); // count 1 for this element and use recursion to handle the rest
+    }
+
+    // retrieves element at given index
+    // @param list a linkedlist
+    // @param index integer index of element
+    // @precondition index is a whole number
+    public get(list, index) {
+        if (index == 0) return list; // if we're at the end, just return what we have
+        return this.get(list.getNext(), index-1); //one step/traverse, count down
+    }
+    // creates a list of certain size with a given dummy value
+    // @numValues number of elements in list
+    // @value value to be put in all nodes
+    // @return list
+    public makeList(numValues, value) {
+        if(numValues == 1) {
+            return new ListNode(value, null); // easy to make a list of 1 value, just make one node
+        }
+        return new ListNode(value, this.makeList(numValues-1, value)); // new node with value pointing to the rest of the list
+    }
+    // appends value to a list
+    // @param list  a linked list
+    // @param value value to be appended
+    // @return list
+    public add(list, value) {
+        if(list == null) {
+            return new ListNode(value, null); // if there is no list, return a new node
+        }
+	    if (list.getNext() == null) {
+		    list.setNext(new ListNode(value, null)); // if this is the last one, set the next to the value
+		    return list;
+	    }
+	   list.setNext(this.add(list.getNext(), value)); //add to the rest of the list and set this node to that
+       return list;
+    }
+
+    // removes all copies of a value from list
+    // @param list      a linked list
+    // @param value     values to be removed
+    // @return list
+    public remove(list, value) {
+        if(list == null) return list; // can't remove from an empty list
+        if(list.getValue() == value) { // if this one needs to be removed
+            list = list.getNext();
+            this.remove(list, value); //remove it
+        } else {
+            list.setNext(this.remove(list.getNext(), value)); //otherwise, set this to point to a cleared list
+            return list;
+        }
+    }
+
+    public reverse(list) {
+        if(list == null || list.getNext() == null) {
+            return list; // easy to reverse 0 or 1 items, just return what we have
+        }
+        next = list.getNext(); // take the next element
+        list.setNext(null); // this element will be the last so null is set next
+        rsl = this.reverse(next); // reverse the rest of the list
+        next.setNext(list); // the previous second element will be the last so we set the previous first at the end
+        return rsl; // return the reversed list because of reference issues
+    }
+}
+
+// uses linkedlist to find out if its seen a number before
+public class Memorizer {
+    private list;
+    private listUtility;
+
+    public Memorizer() {
+        list = null; // start with null
+        listUtility = new ListUtil();
+    }
+    // checks if a value has been seen in the past
+    //@param value a value to check
+    // @return true if found, false if not
+    public seen(value) {
+
+        if(this.checkForVal(value)) // if we've seen it before, return yes
+            return true;
+
+        list = listUtility.add(list, value); // if not, it's new so add it
+        return false; // and say we haven't seen it
+
+    }
+    // helper method that checks the existence of a value in the list
+    // @param value value to check
+    // @return true if found, false if not
+    private checkForVal(value) {
+        if(list == null) // there's nothing in an empty list
+            return false;
+
+        if(list.getValue() == value) // we found the target value in the list
+            return true; //then, we're seeing it
+
+        return this.checkForVal(list.getNext()); // if neither of these terminating conditions are met, we're just not far enough in the list
+    }
+}

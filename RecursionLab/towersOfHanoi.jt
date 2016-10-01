@@ -1,0 +1,42 @@
+// Solves the towers of Hanoi problem for num disks
+// @author Anu Datar
+// With assistance from Mr. Page
+// @version 09/07/2016
+
+public class Towers
+{
+	// instance variable for number of disks
+	private numDiscs;
+	private numMoves;
+	public Towers(num)
+	{
+		numDiscs = num;
+		numMoves = 0;
+	}
+
+	public moveTower(n, src, dest, temp)
+	{
+
+		if(n > 0)
+		{
+			this.moveTower(n - 1, src, temp, dest);
+			this.moveOneDisc(src, dest);
+			this.moveTower(n - 1, temp, dest, src);
+		}
+		else
+			return "Base Case!";
+	}
+
+	public moveOneDisc(src, dest)
+	{
+		numMoves = numMoves + 1;
+		return "moving disc from " + src + " to " +  dest;
+	}
+
+	public solve()
+	{
+		this.moveTower(numDiscs, 1, 2, 3);
+		return numMoves;
+	}
+
+}

@@ -1,0 +1,24 @@
+// SumEnum provides a way to add all the numbers in an Enumerator object.
+// @author Ashwin Reddy
+// @version September 5, 2015
+public class SumEnum
+{
+    // Sums all terms in an Enum object.
+    // @param enum      an Enum object
+    // @return         sum of all its terms
+    public sum(enum)
+    {
+        return this.sumHelp(enum, 0);
+    }
+
+    // Computes the sum recursively.
+    // @param enum      an Enum object
+    // @param result    our guess of the final answer
+    // @return         sum of terms of Enum
+    public sumHelp(enum, result)
+    {
+        if (enum.hasNext() == false)
+            return result;
+        return result + this.sumHelp(enum, enum.next());
+    }
+}
